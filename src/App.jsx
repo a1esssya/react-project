@@ -2,6 +2,8 @@ import {ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
+import KillerPage from "./pages/KillerPage";
+import UserPage from "./pages/UserPage";
 import RegistrationPage from "./pages/RegistrationPage";
 
 const theme = createTheme({
@@ -31,10 +33,11 @@ export default function App() {
           <Routes>
             <Route path="/registration" element={<RegistrationPage/>} exact />
             <Route path="/login" element={<LoginPage/>} exact />
+            <Route path="/killerSide" element={<KillerPage/>} exact />
+            <Route path="/puppeteerSide" element={<UserPage/>} exact />
             <Route path="/" element={<MainPage/>} exact />
           </Routes>
       </Router>
     </ThemeProvider>
   )
 }
-

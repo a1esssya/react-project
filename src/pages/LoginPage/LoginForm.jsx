@@ -1,23 +1,30 @@
 import { Button, Paper, Typography } from "@mui/material";
 import { useFormik } from "formik";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { string, object } from "yup";
+import api from "../../api";
 import FormikTextField from "../../components/FormikTextField";
 
 export default function LoginForm(){
+
+  const navigate = useNavigate()
     
-  const handleSubmit = (values, { setSubmitting }) =>{
+  const handleSubmit = async (values, { setSubmitting }) =>{
     const { email, password } = values
-    alert(`
-    Email: ${email},
-    Password: ${password},
-    `)
 
-    // const { data } = await api.post(`/users/signin`, { email, password })
+    const {data} = await api.post(`/users/signin`, {email, password })
 
-    // sessionStorage.token = data.token
-    // sessionStorage.email = data.email
-    // api.setup(data.token)
-    // navigate('/', { replace: true })
+    sessionStorage.token = data.token
+    sessionStorage.email = data.email
+    sessionStorage.role = data.role
+    api.setup(data.token)
+
+    if (data.role === "performer") {
+      navigate('/killerSide', { replace: true })
+    } else {
+      navigate('/puppeteerSide', { replace: true })
+    }
 
     setSubmitting(false)
   }

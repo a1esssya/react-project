@@ -5,38 +5,39 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 import { string, object, date, ref } from "yup";
 import FormikTextField from "../../components/FormikTextField";
-
-
-
-
+import api from '../../api'
 
 
 export default function RegistrationForm(){
     
+  const navigate = useNavigate()
 
   const handleSubmit = async (values, { setSubmitting }) =>{
-    const { userType, birthday, email, password } = values
-    alert(`
-    UserType: ${userType},
-    Birthday: ${new Date(birthday).getTime()},
-    Email: ${email},
-    Password: ${password},
-    `)
+    const { role, email, password } = values
 
-    // const { data } = await api.post(`/targets`, { email, password })
+    await api.post(`/users/signup`, { role, email, password })
+    const {data} = await api.post(`/users/signin`, {email, password })
 
-    // sessionStorage.token = data.token
-    // sessionStorage.email = data.email
-    // api.setup(data.token)
-    // navigate('/', { replace: true })
+    sessionStorage.token = data.token
+    sessionStorage.email = data.email
+    sessionStorage.role = data.role
+    api.setup(data.token)
+
+    if (data.role === "performer") {
+      navigate('/killerSide', { replace: true })
+    } else {
+      navigate('/puppeteerSide', { replace: true })
+    }
+
     setSubmitting(false)
   }
 
   const formik = useFormik({
     initialValues: {
-      userType: '',
+      role: '',
       birthday: '',
       email: '',
       password: '',
@@ -44,7 +45,7 @@ export default function RegistrationForm(){
     },
     onSubmit: handleSubmit,
     validationSchema: object().shape({
-      userType: string().required(),
+      role: string().required(),
       birthday: date().max(new Date(Date.now() - 567648000000), "You must be at least 18 years").required(),
       email: string().email().required(),
       password: string().min(6).required(),
@@ -71,16 +72,16 @@ export default function RegistrationForm(){
           <FormLabel sx={{mr: '10%'}}>Sign up as a:</FormLabel>
           <RadioGroup
             row
-            name="userType"
-            value={formik.values.userType}
+            name="role"
+            value={formik.values.role}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.userType && !!formik.errors.userType}
+            error={formik.touched.role && !!formik.errors.role}
             helperText={
-              formik.touched.userType && !!formik.errors.userType && formik.errors.userType
+              formik.touched.role && !!formik.errors.role && formik.errors.role
             }
           >
-            <FormControlLabel value="killer" control={<Radio />} label="Killer" mr={10}/>
+            <FormControlLabel value="performer" control={<Radio />} label="Killer" mr={10}/>
             <FormControlLabel value="user" control={<Radio />} label="User" />
           </RadioGroup>
         </FormControl>
