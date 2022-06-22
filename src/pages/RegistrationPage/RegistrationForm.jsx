@@ -56,8 +56,6 @@ export default function RegistrationForm(){
 
   const [value, setValue] = useState(null)
 
-  console.log(formik);
-
     return(
       <Paper
         sx={{ display: "flex", flexDirection:"column", alignItems: "center", width: { lg: "50%", xs: "70%"} , backgroundColor:'secondary.main'}}
@@ -69,7 +67,7 @@ export default function RegistrationForm(){
           sign up
         </Typography>
         <FormControl sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', width: '70%'}}>
-          <FormLabel sx={{mr: '10%'}}>Sign up as a:</FormLabel>
+          <FormLabel color="info" sx={{mr: '10%'}}>Sign up as a:</FormLabel>
           <RadioGroup
             row
             name="role"
@@ -97,11 +95,11 @@ export default function RegistrationForm(){
               <FormikTextField 
                 {...params} 
                 label="Birthday date"
-                type="date"
+                type="birthday"
                 name="birthday"
                 formik={formik}
                 sx={{my: 2, width: '70%'}}
-                autoComplete="off"
+                // autoComplete="off"
               />
             }
           />
@@ -113,7 +111,7 @@ export default function RegistrationForm(){
           name="email"
           formik={formik}
           sx={{my: 2, width: '70%'}}
-          autoComplete="off"
+          // autoComplete="off"
         />
         <FormikTextField
           label="Password"

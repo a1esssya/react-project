@@ -1,6 +1,5 @@
 import { Button, Paper, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { string, object } from "yup";
 import api from "../../api";
@@ -59,7 +58,7 @@ export default function LoginForm(){
           name="email"
           formik={formik}
           sx={{my: 2, width: '70%'}}
-          autoComplete="off"
+          // autoComplete="off"
         />
         <FormikTextField
           label="Password"
