@@ -1,10 +1,11 @@
 import { Box, Skeleton } from "@mui/material"
-import DeathCard from "../../components/DeathCard"
-import { useCardsGet } from "../../queries/cards"
+import DeathCard from "./DeathCard"
+import { useCardsGet } from "../queries/cards"
+import KillerCard from "../pages/KillerPage/killerCard"
 
 
 
-export default function CardList() {
+export default function CardList({isKiller}) {
   
   const { isLoading, data: cards } = useCardsGet()
 
@@ -15,7 +16,7 @@ export default function CardList() {
           <Skeleton  key={i} height="320px" width="85%" variant="rect" />
         ))}
       {cards?.map(card => (
-        <DeathCard key={card.id} data={card}/>
+        isKiller ? <KillerCard key={card.id} data={card}/> : <DeathCard key={card.id} data={card}/>
       ))}
     </Box>
   )

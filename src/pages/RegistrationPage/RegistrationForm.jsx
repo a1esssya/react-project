@@ -16,6 +16,7 @@ export default function RegistrationForm(){
   const navigate = useNavigate()
 
   const handleSubmit = async (values, { setSubmitting }) =>{
+    setSubmitting(true)
     const { role, email, password } = values
 
     await api.post(`/users/signup`, { role, email, password })
@@ -53,6 +54,7 @@ export default function RegistrationForm(){
     }),
     validateOnMount: true,
   })
+
 
   const [value, setValue] = useState(null)
 
@@ -99,7 +101,6 @@ export default function RegistrationForm(){
                 name="birthday"
                 formik={formik}
                 sx={{my: 2, width: '70%'}}
-                // autoComplete="off"
               />
             }
           />
@@ -111,7 +112,6 @@ export default function RegistrationForm(){
           name="email"
           formik={formik}
           sx={{my: 2, width: '70%'}}
-          // autoComplete="off"
         />
         <FormikTextField
           label="Password"

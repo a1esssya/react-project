@@ -2,7 +2,7 @@ import { Box, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, I
 import { useEffect, useState } from 'react'
 import {ExpandMore as ExpandMoreIcon, MoreVert as MoreVertIcon, PublishedWithChanges as PublishedIcon, Handshake as HandshakeIcon, CheckCircleOutline as DoneIcon, HorizontalRule as LineIcon} from '@mui/icons-material';
 import { useFormik } from 'formik';
-import { date, number, object, string } from 'yup';
+import { number, object, string } from 'yup';
 import axios from 'axios';
 import { useQueryClient } from 'react-query';
 import CardEditor from '../pages/UserPage/CardDialog';
@@ -94,7 +94,7 @@ export default function DeathCard({data}) {
     validationSchema: object().shape({
       name: string().required('name is required'),
       sex: string().required('Choose the right variant'),
-      birthDate: date().max(new Date(Date.now() - 567648000000), "You must be at least 18 years").required("Plese, write the date in mm/dd/yyyy format"),
+      birthDate: string().max(new Date(Date.now() - 567648000000), "You must be at least 18 years").required("Plese, write the date in mm/dd/yyyy format"),
       description: string().max(400),
       price: number().min(5000).required('Price is required'),
       imageUrl: string(),
@@ -175,25 +175,25 @@ export default function DeathCard({data}) {
       />
       <CardActions disableSpacing sx={{display: "flex", my: 2}}>
       <Box sx={{ width: "50%", display: "flex", justifyContent: "space-between"}}>
-        <Tooltip title="Published"><PublishedIcon color="success" fontSize='medium'/></Tooltip>
-          {data?.status === "assigned" ? 
+        <Tooltip title="Published"><PublishedIcon color="success" fontSize='large'/></Tooltip>
+          {(data?.status === "assigned" || data?.status === "confirmed") ? 
             <>
               <LineIcon color="success" fontSize='large'/>
               <Tooltip title="Assigned"><HandshakeIcon color="success" fontSize='large'/></Tooltip>
             </> : 
             <>
-              <LineIcon color="disabled" fontSize='medium'/>
-              <Tooltip title="Assigned"><HandshakeIcon fontSize='medium' color="disabled"/></Tooltip>
+              <LineIcon color="disabled" fontSize='large'/>
+              <Tooltip title="Assigned"><HandshakeIcon fontSize='large' color="disabled"/></Tooltip>
             </>
           }
-          {(data?.status === "confirmed" || data?.status === "assigned") ? 
+          {data?.status === "confirmed" ? 
             <> 
               <LineIcon color="success" fontSize='large'/> 
               <Tooltip title="Done"><DoneIcon color="success" fontSize='large'/></Tooltip>
             </> : 
             <> 
-              <LineIcon color="disabled" fontSize='medium'/> 
-              <Tooltip title="Done"><DoneIcon  fontSize='medium' color="disabled"/></Tooltip>
+              <LineIcon color="disabled" fontSize='large'/> 
+              <Tooltip title="Done"><DoneIcon  fontSize='large' color="disabled"/></Tooltip>
             </>
           }
         </Box>
