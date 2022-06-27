@@ -1,5 +1,6 @@
 import { Button, Paper, Typography } from "@mui/material";
 import { useFormik } from "formik";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { string, object } from "yup";
 import api from "../../api";
@@ -8,8 +9,10 @@ import FormikTextField from "../../components/FormikTextField";
 export default function LoginForm(){
 
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
     
-  const handleSubmit = async (values, { setSubmitting }) =>{
+  const handleSubmit = async (values) =>{
+    setIsLoading(true)
     const { email, password } = values
 
     const {data} = await api.post(`/users/signin`, {email, password })
@@ -25,7 +28,7 @@ export default function LoginForm(){
       navigate('/puppeteerSide', { replace: true })
     }
 
-    setSubmitting(false)
+    setIsLoading(false)
   }
 
   const formik = useFormik({
@@ -58,7 +61,6 @@ export default function LoginForm(){
           name="email"
           formik={formik}
           sx={{my: 2, width: '70%'}}
-          // autoComplete="off"
         />
         <FormikTextField
           label="Password"
@@ -72,7 +74,7 @@ export default function LoginForm(){
           variant="contained"
           color="primary"
           size="large"
-          disabled={!formik.isValid && !formik.isSubmitting}
+          disabled={!formik.isValid && isLoading}
           sx={{mb: 5, width: '70%'}}
         >
           sign in

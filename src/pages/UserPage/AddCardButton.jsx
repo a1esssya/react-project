@@ -2,7 +2,7 @@ import { Fab } from "@mui/material"
 import { useEffect, useState } from "react"
 import { Add as AddIcon } from '@mui/icons-material'
 import { useFormik } from "formik"
-import { date, number, object, string } from "yup"
+import { number, object, string } from "yup"
 import axios from "axios"
 import { useQueryClient } from 'react-query'
 import api from "../../api"
@@ -16,28 +16,7 @@ export default function AddCardButton() {
 
     const open = () => setIsOpen(!isOpen)
 
-    const handleSubmit = async (values, { setSubmitting, resetForm}) =>{
-      setSubmitting(true)
-      const {name, sex, birthDate, description, price} = values
-      const birthDateInSeconds = Date.parse(`${birthDate}`)
 
-      const { data } = await api.post(`/targets`, {name, sex, birthDate: `${birthDateInSeconds}`, description, price})
-
-      const resource = 'target'
-      const formData = new FormData()
-      formData.append('image', image)
-      const { data: imageUrl } = await axios.post(
-        'https://server.kemalkalandarov.lol/api/images',
-        formData,
-        { params: { resource, id: data.id } }, 
-      )
-
-      await api.put(`/targets/${data.id}`, { imageUrl })
-      setSubmitting(false)
-      resetForm({})
-      queryClient.invalidateQueries('cards')
-      setIsOpen(false)
-    }
 
     const formik = useFormik({
       initialValues: {
@@ -51,12 +30,35 @@ export default function AddCardButton() {
       validationSchema: object().shape({
         name: string().required('name is required'),
         sex: string().required('Choose the right variant'),
-        birthDate: date().max(new Date(Date.now() - 567648000000), "You must be at least 18 years").required("Plese, write the date in mm/dd/yyyy format"),
+        birthDate: string().required("Plese, write the date in mm/dd/yyyy format"),
         description: string().max(400),
         price: number().min(5000).required('Price is required'),
       }),
       validateOnMount: true,
   })
+
+  async function handleSubmit (values){
+    formik.setSubmitting(true)
+    const {name, sex, birthDate, description, price} = values
+    const birthDateInSeconds = Date.parse(`${birthDate}`)
+
+    const { data } = await api.post(`/targets`, {name, sex, birthDate: `${birthDateInSeconds}`, description, price})
+
+    const resource = 'target'
+    const formData = new FormData()
+    formData.append('image', image)
+    const { data: imageUrl } = await axios.post(
+      'https://server.kemalkalandarov.lol/api/images',
+      formData,
+      { params: { resource, id: data.id } }, 
+    )
+
+    await api.put(`/targets/${data.id}`, { imageUrl })
+    formik.setSubmitting(false)
+    queryClient.invalidateQueries('cards')
+    setIsOpen(false)
+    formik.resetForm()
+  }
 
   const [imagePreview, setImagePreview] = useState('')
   useEffect(() => {
@@ -82,7 +84,10 @@ export default function AddCardButton() {
         </Fab>
         <CardDialog
           open={isOpen}
-          onClose={() => setIsOpen(false)}
+          onClose={() => {
+            setIsOpen(false)
+            formik.resetForm()
+          }}
           title="Add card"
           formik={formik}
           setImage={setImage}

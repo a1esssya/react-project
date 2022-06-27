@@ -1,12 +1,12 @@
 import {useState } from "react";
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogTitle, Fab, FormControl, FormControlLabel, FormLabel, IconButton, Input, InputAdornment, Radio, RadioGroup, Stack, Typography} from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, Input, InputAdornment, Radio, RadioGroup, Stack, Typography} from "@mui/material"
 import {PhotoCamera as PhotoCameraIcon, Check as CheckIcon}  from '@mui/icons-material'
 import FormikTextField from "../../components/FormikTextField"
 
 
 export default function CardDialog({formik, setImage, title, onClose, ...otherProps }) {
 
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false)
 
   const handleButtonClick = () => {
     setSuccess(false)
@@ -44,15 +44,15 @@ export default function CardDialog({formik, setImage, title, onClose, ...otherPr
           </RadioGroup>
         </FormControl>
 
-        <FormikTextField
-          label="Birthday date "
+        <FormikTextField 
+          label="Birthday date (mm/dd/yyyy)"
           type="birthDate"
           format="date"
           name="birthDate"
           formik={formik}
           sx={{my: 2, width: '80%'}}
-          autoComplete="off"
         />
+
 
         <FormikTextField
           label="Distinctive features "
@@ -90,9 +90,10 @@ export default function CardDialog({formik, setImage, title, onClose, ...otherPr
         }}
         />
 
-        <Box sx={{display: "flex", justifyContent: "end"}}>
-          <Button onClick={onClose}>Cancel</Button>
+        <Box sx={{display: "flex", justifyContent: "space-between", width: "80%", mt: 2, mb: 1}}>
+          <Button variant="outlined" sx={{width: "45%"}} onClick={onClose}>Cancel</Button>
           <Button 
+          sx={{width: "45%"}}
           type="submit"
           onClick={formik?.handleSubmit}
           variant="contained"
